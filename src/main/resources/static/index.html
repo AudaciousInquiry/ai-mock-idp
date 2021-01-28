@@ -1,0 +1,334 @@
+<!--
+  ~ Copyright (c) 2020 Audacious Inquiry, LLC
+  ~
+  ~ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+  ~
+  ~ 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+  ~
+  ~ 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+  ~
+  ~ 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Login to the MockIDP!!!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+
+    </head>
+<body>
+  <div class="jumbotron">
+    <h1 class="display-4">The Audacious Inquiry Mock Identity Provider</h1>
+    <p class="lead">This is a simple identity provider to facilitate testing of single sign-on based on standard federated identity authentication standards.</p>
+  </div>
+  <div class="container">
+      <form id="sso-form" method="post">
+
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-primary active">
+            <input type="radio" name="spOption" id="xmlOption" value="xml" data-toggle="collapse" data-target=".multi-collapse" autocomplete="off" checked> Metadata by XML
+          </label>
+          <label class="btn btn-primary">
+            <input type="radio" name="spOption" id="urlOption" value="url" data-toggle="collapse" data-target=".multi-collapse" autocomplete="off"> Metadata by URL
+          </label>
+        </div>
+        <div class="collapse multi-collapse pt-4" id="urlCollapse">
+          <label for="spMetadataUrl">Service Provider Metadata URL:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon3">https://example.com/serviceProvider.xml</span>
+            </div>
+            <input type="text" class="form-control" id="spMetadataUrl" name="spMetadataUrl"  aria-describedby="basic-addon3">
+          </div>
+        </div>
+        <div class="collapse multi-collapse show pt-4" id="xmlCollapse">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Metadata XML</span>
+            </div>
+            <textarea id="spMetaDataXml" name="spMetadataXml" class="form-control" aria-label="Metadata XML"></textarea>
+          </div>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Private Signing PEM Key</span>
+          </div>
+          <textarea id="localPemKey" name="localPemKey" class="form-control" aria-label="Private RSA PEM Signing Key"></textarea>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Public Signing PEM Certificate</span>
+          </div>
+          <textarea id="publicSigningCert" name="publicSigningCert" class="form-control" aria-label="Public PEM Signing Cert"></textarea>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group">
+          <input id="encryptAssertion" name="encryptAssertion" type="checkbox" value="true"  data-toggle="toggle" data-onstyle="primary" data-size="xs">
+          <label for="encryptAssertion" class="px-2">Encrypt Assertion</label>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group">
+          <input id="signAssertion" name="signAssertion" type="checkbox" value="true"  data-toggle="toggle" data-onstyle="primary" data-size="xs">
+          <label for="signAssertion" class="px-2">Sign Assertion</label>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group">
+          <input id="signResponse" name="signResponse" type="checkbox" value="true" data-toggle="toggle" data-onstyle="primary" data-size="xs">
+          <label for="signResponse" class="px-2">Sign SAML Response</label>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="subjectConfirmationValidity">Subject Confirmation Validity</label>
+          </div>
+          <select class="custom-select" id="subjectConfirmationValidity" name="subjectConfirmationValidity">
+            <option value="valid" selected>Valid</option>
+            <option value="expired">Expired </option>
+            <option value="future">Future</option>
+            <option value="reversed">Reversed</option>
+          </select>
+        </div>
+        <br class="my-4"/>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="samlConditionsValidity">SAML Conditions Validity</label>
+          </div>
+          <select class="custom-select" id="samlConditionsValidity" name="samlConditionsValidity">
+            <option value="valid" selected>Valid</option>
+            <option value="expired">Expired </option>
+            <option value="future">Future</option>
+            <option value="reversed">Reversed</option>
+          </select>
+        </div>
+
+        <br class="my-4"/>
+        <div id="patientContext" class="btn-group btn-group-toggle d-none" data-toggle="buttons">
+          <label class="btn btn-primary active">
+            <input type="radio" name="patientContextOption" id="requestParameters" value="request" autocomplete="off" checked> Patient Context as Request Parameters
+          </label>
+          <label class="btn btn-primary">
+            <input type="radio" name="patientContextOption" id="assertionParameters" value="assertion" autocomplete="off"> Patient Context as Assertion Attributes
+          </label>
+        </div>
+        <div class="input-group">
+          <input id="debugMode" name="debugMode" type="checkbox" value="true" data-toggle="toggle" data-onstyle="primary" data-size="xs">
+          <label for="debugMode" class="px-2">Debug Mode</label>
+        </div>
+      </form>
+      <br class="my-4"/>
+      <ul class="list-group" id="login-list">
+        <li class="list-group-item disabled"><a>Login As:</a></li>
+    </ul>
+  </div>
+  <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+  <script type="text/javascript">
+		$().ready(function() {
+      formCache.init().fetch();
+		    $.ajax({
+		        type: "GET",
+		        url: "/users",
+		        data: "{}",
+		        contentType: "application/json; charset=utf-8",
+		        dataType: "json",
+		        success: function(msg) {
+		        		var items = [];
+		            $.each(msg, function(index, item) {
+		            		items.push('<li class="list-group-item"><a href="/sso/' + item.key + '" class="cred"><span class="tab">' + item.user.firstName + ' ' + item.user.lastName + ' (' + item.user.userName + ') &lt;' + item.user.email + '&gt;</span></a>');
+                    var patientCount = 0;
+                    items.push('<ul class="list-group" id="login-list">');
+		            		$.each(item.user.patients, function(index, patient) {
+		            		    $('#patientContext').removeClass('d-none');
+                        items.push('<li class="list-group-item"><a href="/sso/' + item.key + '/' + patientCount++ + '" class="cred"><span class="tab">Patient: ' + patient.oid + ' (' + patient.patientSourceCode + ') ' + patient.patientAccountNumber + '</span></a></li>');
+                      });
+		            		items.push('</ul>');
+		            		items.push('</li>');
+		            });
+		            $('#login-list').append( items.join('') );
+
+                $(".cred").click(function (event) {
+                  event.preventDefault();
+                  formCache.save();
+                  $('#sso-form').attr('action', $(this).attr("href")).submit();
+                });
+
+
+		        },
+		        error: function() {
+		            alert("Failed to load users");
+		        }
+		    });
+
+
+
+		});
+
+    $('input[type=radio][name=spOption]').change(function (e) {
+      e.stopPropagation();
+      if(this.id == 'urlOption'){
+        $('#xmlCollapse').collapse('hide');
+        $('#urlCollapse').collapse('show');
+      }else if(this.id ==  'xmlOption'){
+        $('#urlCollapse').collapse('hide');
+        $('#xmlCollapse').collapse('show');
+      }
+    });
+
+    var formCache = (function () {
+      var _form = null,
+          _formData = [],
+          _strFormElements = "input[type='text'],"
+              + "input[type='checkbox'],"
+              + "input[type='radio'],"
+              // + "input[type='password'],"  // leave password field out
+              // + "input[type='image'],"
+              + "input[type='file'],"
+              // more input types...
+              + "input[type='email'],"
+              + "input[type='tel'],"
+              + "input[type='url'],"
+              + "select,"
+              + "textarea";
+
+      function _warn() {
+        console.log('formCache is not initialized.');
+      }
+
+      return {
+
+        /**
+         * Initializes the formCache with a target form (id).
+         * You can pass any container id for the formId parameter, formCache will
+         * still look for form elements inside the given container. If no form id
+         * is passed, it will target the first <form> element in the DOM.
+         */
+        init: function (formId) {
+          var f = (typeof formId === 'undefined' || formId === null || $.trim(formId) === '')
+              ? $('form').first()
+              : $('#' + formId);
+          _form = f.length > 0 ? f : null;
+          console.log(_form);
+          return formCache; // make it chainable
+        },
+
+        /**
+         * Stores the form data in the cookies.
+         */
+        save: function () {
+          if (_form === null) return _warn();
+
+          _form
+          .find(_strFormElements)
+          .each(function() {
+            var f = $(this).attr('id') + ':' + formCache.getFieldValue($(this));
+            _formData.push(f);
+          });
+          sessionStorage.setItem('formData', _formData.join()); // 1 year expiration (persistent)
+          console.log('Cached form data:', _formData);
+          return formCache;
+        },
+
+        /**
+         * Fills out the form elements from the data previously stored in the cookies.
+         */
+        fetch: function () {
+          if (_form === null) return _warn();
+
+          if (sessionStorage.getItem("formData") === null) return;
+          var fd = _formData.length < 1 ? sessionStorage.getItem('formData').split(',') : _formData;
+          $.each(fd, function (i, item) {
+            var i = item.indexOf(':');
+            var s = [item.slice(0,i), item.slice(i+1)];
+            var elem = $('#' + s[0]);
+            formCache.setFieldValue(elem, s[1]);
+          });
+          return formCache;
+        },
+
+        /**
+         * Sets the value of the specified form field from previously stored data.
+         */
+        setFieldValue: function (elem, value) {
+          if (_form === null) return _warn();
+
+          if ((elem.is('input#xmlOption') || elem.is('input#urlOption')) && value === 'true') {
+            elem.parent().trigger('click');
+          }
+
+          if (elem.is('input:text') || elem.is('textarea')) {
+            elem.val(value);
+          } else if (elem.is('input:checkbox') && value !== elem.prop('checked').toString()) {
+            elem.bootstrapToggle('toggle');
+          } else if (elem.is('select')) {
+            elem.prop("selectedIndex", value);
+          }
+          return formCache;
+        },
+
+        /**
+         * Gets the previously stored value of the specified form field.
+         */
+        getFieldValue: function (elem) {
+          if (_form === null) return _warn();
+
+          if (elem.is('input:text') || elem.is('input:image') ||
+              elem.is('input:file') || elem.is('textarea')) {
+            return elem.val();
+          } else if (elem.is('input:checkbox') || elem.is('input:radio')) {
+            return elem.prop('checked');
+          } else if (elem.is('select')) {
+            return elem.prop('selectedIndex');
+          }
+          else return null;
+        },
+
+        /**
+         * Clears the cache and removes the previously stored form data from cookies.
+         */
+        clear: function () {
+          _formData = [];
+          sessionStorage.removeItem('formData');
+          return formCache;
+        },
+
+        /**
+         * Clears all the form fields.
+         * This is different from form.reset() which only re-sets the fields
+         * to their initial values.
+         */
+        clearForm: function () {
+          _form
+          .find(_strFormElements)
+          .each(function() {
+            var elem = $(this);
+            if (elem.is('input:text') || elem.is('input:password') || elem.is('input:hidden') ||
+                elem.is('input:image') || elem.is('input:file') || elem.is('textarea')) {
+              elem.val('');
+            } else if (elem.is('input:checkbox') || elem.is('input:radio')) {
+              elem.prop('checked', false);
+            } else if (elem.is('select')) {
+              elem.prop('selectedIndex', -1);
+            }
+          });
+          return formCache;
+        }
+      };
+    })();
+
+
+	</script>
+</body>
+</html>

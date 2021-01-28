@@ -1,0 +1,7 @@
+userName: exampleadmin
+email: admin@example.org
+firstName: Example
+lastName: Admin
+patients:
+roles:
+  - Admin

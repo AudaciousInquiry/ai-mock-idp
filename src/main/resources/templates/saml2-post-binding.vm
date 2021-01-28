@@ -1,0 +1,146 @@
+<!--
+  ~ Copyright (c) 2020 Audacious Inquiry, LLC
+  ~
+  ~ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+  ~
+  ~ 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+  ~
+  ~ 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+  ~
+  ~ 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  -->
+
+##
+## Velocity Template for SAML 2 HTTP-POST binding
+##
+## Velocity context may contain the following properties
+## action - String - the action URL for the form
+## binding - String - the SAML binding type in use
+## RelayState - String - the relay state for the message
+## SAMLRequest - String - the Base64 encoded SAML Request
+## SAMLResponse - String - the Base64 encoded SAML Response
+##
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        #parse ( "/templates/add-html-head-content.vm" )
+
+#if($DEBUG)
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+#end
+    </head>
+
+#if($DEBUG)
+    <body>
+#else
+    <body onload="document.forms[0].submit()">
+#end
+        <noscript>
+            <p>
+                <strong>Note:</strong> Since your browser does not support JavaScript,
+                you must press the Continue button once to proceed.
+            </p>
+        </noscript>
+        
+        <form action="${action}" method="post">
+            <div>
+                #if($RelayState)<input type="hidden" name="RelayState" value="${RelayState}"/>#end
+                
+                #if($SAMLRequest)<input type="hidden" name="SAMLRequest" value="${SAMLRequest}"/>#end
+
+                #if($externalMrn)<input  type="hidden" name="externalMrn" value="${externalMrn}" />#end
+                #if($oid)<input  type="hidden" name="oid" value="${oid}" />#end
+                #if($patientAccountNumber)<input  type="hidden" name="patientAccountNumber" value="${patientAccountNumber}" />#end
+                #if($patientSourceCode)<input  type="hidden" name="patientSourceCode" value="${patientSourceCode}" />#end
+                #if($SAMLResponse)<input type="hidden" name="SAMLResponse" value="${SAMLResponse}"/>#end
+                
+            </div>
+#if((! $DEBUG))
+            <noscript>
+#end
+
+                <div>
+                    <input type="submit" value="Continue" class="btn btn-primary"/>
+                </div>
+#if((! $DEBUG))
+            </noscript>
+#end
+
+        </form>
+#if($DEBUG)
+        <h1>SAML HTTP Binding Debug Mode</h1>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Request Attribute</th>
+            <th scope="col">Value</th>
+          </tr>
+          </thead>
+          <tbody>
+              #if($RelayState)
+              <tr>
+                <th scope="row">1</th>
+                <td>RelayState</td>
+                <td style="overflow-wrap:anywhere;">${RelayState}</td>
+              </tr>
+              #end
+              #if($externalMrn)
+              <tr>
+                <th scope="row">1</th>
+                <td>externalMrn</td>
+                <td style="overflow-wrap:anywhere;">${externalMrn}</td>
+              </tr>
+              #end
+              #if($oid)
+              <tr>
+                <th scope="row">1</th>
+                <td>oid</td>
+                <td style="overflow-wrap:anywhere;">${oid}</td>
+              </tr>
+              #end
+              #if($patientAccountNumber)
+              <tr>
+                <th scope="row">1</th>
+                <td>patientAccountNumber</td>
+                <td style="overflow-wrap:anywhere;">${patientAccountNumber}</td>
+              </tr>
+              #end
+              #if($patientSourceCode)
+              <tr>
+                <th scope="row">1</th>
+                <td>patientSourceCode</td>
+                <td style="overflow-wrap:anywhere;">${patientSourceCode}</td>
+              </tr>
+              #end
+              #if($SAMLRequest)
+              <tr>
+                <th scope="row">1</th>
+                <td>SAMLRequest</td>
+                <td style="overflow-wrap:anywhere;"><span id="samlRequest">${SAMLRequest}</span></td>
+              </tr>
+              #end
+              #if($SAMLResponse)
+              <tr>
+                <th scope="row">1</th>
+                <td>SAMLResponse</td>
+                <td style="overflow-wrap:anywhere;"><span id="samlResponse">${SAMLResponse}</span></td>
+              </tr>
+              #end
+          </tbody>
+        </table>
+
+<script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+#end
+        #parse ( "/templates/add-html-body-content.vm" )
+    </body>
+</html>
